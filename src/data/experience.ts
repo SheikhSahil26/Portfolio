@@ -6,7 +6,7 @@ export const experiences: Experience[] = [
     type: 'work',
     title: 'Software Developer',
     organization: 'eSparkBiz Technologies',
-    period: '2024 — Present',
+    period: '2026 — Present',
     description:
       'Building scalable web applications and backend systems using modern technologies.',
   },
