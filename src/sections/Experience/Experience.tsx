@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { experiences } from '../../data/experience';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { fadeInUp } from '../../animations/variants';
-import { gsap, ScrollTrigger } from '../../animations/gsap';
+import { gsap } from '../../animations/gsap';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import { Briefcase, GraduationCap } from 'lucide-react';

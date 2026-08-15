@@ -22,7 +22,7 @@ export default function Projects() {
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
         >
-          {projects.map((project, i) => (
+          {projects.map((project) => (
             <motion.article
               key={project.id}
               variants={fadeInUp}
