@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { navItems, personalInfo } from '../../data/personal';
+import { navItems } from '../../data/personal';
 import { menuOverlay, menuItem, staggerContainer } from '../../animations/variants';
 import { X, Download } from 'lucide-react';
 
