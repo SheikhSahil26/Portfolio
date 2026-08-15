@@ -6,9 +6,13 @@ import { useCursor } from '../../components/cursor/CustomCursor';
 import { staggerContainer, fadeInUp, fadeIn } from '../../animations/variants';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import useReducedMotion from '../../hooks/useReducedMotion';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Download } from 'lucide-react';
 
-export default function Hero() {
+interface HeroProps {
+  onOpenResume?: () => void;
+}
+
+export default function Hero({ onOpenResume }: HeroProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { setCursorVariant } = useCursor();
   const isMobile = useIsMobile();
@@ -193,6 +197,15 @@ export default function Hero() {
             <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1">
               →
             </span>
+          </button>
+          <button
+            onClick={() => onOpenResume ? onOpenResume() : window.open(personalInfo.resumeUrl || '/sahil_latest_cv_22_may.pdf', '_blank')}
+            className="group flex items-center gap-2 font-mono text-[0.7rem] tracking-[0.2em] px-8 py-4 border border-accent/40 bg-accent/5 text-accent hover:bg-accent/10 transition-all duration-300 cursor-pointer"
+            onMouseEnter={() => setCursorVariant('hover')}
+            onMouseLeave={() => setCursorVariant('default')}
+          >
+            <Download size={14} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
+            VIEW CV / RESUME
           </button>
           <button
             onClick={() => scrollTo('#contact')}

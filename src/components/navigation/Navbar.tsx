@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { navItems } from '../../data/personal';
+import { navItems, personalInfo } from '../../data/personal';
 import { scrollTo } from '../../hooks/useLenis';
 import { useCursor } from '../cursor/CustomCursor';
 import MobileMenu from './MobileMenu';
 import { Menu } from 'lucide-react';
 
-export default function Navbar() {
+interface NavbarProps {
+  onOpenResume?: () => void;
+}
+
+export default function Navbar({ onOpenResume }: NavbarProps) {
   const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -74,6 +78,14 @@ export default function Navbar() {
                     <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent transition-all duration-300 group-hover:w-full" />
                   </button>
                 ))}
+                <button
+                  onClick={() => onOpenResume ? onOpenResume() : window.open(personalInfo.resumeUrl || '/sahil_latest_cv_22_may.pdf', '_blank')}
+                  className="font-mono text-[0.65rem] tracking-[0.15em] px-3 py-1.5 border border-accent/40 text-accent hover:bg-accent/10 transition-all duration-300 cursor-pointer"
+                  onMouseEnter={() => setCursorVariant('hover')}
+                  onMouseLeave={() => setCursorVariant('default')}
+                >
+                  RESUME
+                </button>
               </div>
 
               {/* Mobile Menu Button */}
@@ -94,6 +106,7 @@ export default function Navbar() {
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         onNavClick={handleNavClick}
+        onOpenResume={onOpenResume}
       />
     </>
   );

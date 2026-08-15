@@ -81,6 +81,7 @@ export interface PersonalInfo {
   email: string;
   socials: SocialLink[];
   focus: string[];
+  resumeUrl?: string;
 }
 
 // ─── Navigation Types ────────────────────────────────────────────

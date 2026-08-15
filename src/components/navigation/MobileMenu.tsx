@@ -1,15 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { navItems } from '../../data/personal';
+import { navItems, personalInfo } from '../../data/personal';
 import { menuOverlay, menuItem, staggerContainer } from '../../animations/variants';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   onNavClick: (href: string) => void;
+  onOpenResume?: () => void;
 }
 
-export default function MobileMenu({ isOpen, onClose, onNavClick }: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose, onNavClick, onOpenResume }: MobileMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -52,6 +53,17 @@ export default function MobileMenu({ isOpen, onClose, onNavClick }: MobileMenuPr
                 </span>
               </motion.button>
             ))}
+            <motion.button
+              variants={menuItem}
+              onClick={() => {
+                onClose();
+                if (onOpenResume) onOpenResume();
+              }}
+              className="inline-flex items-center gap-3 mt-6 font-mono text-xs tracking-[0.2em] px-6 py-3 border border-accent/40 bg-accent/10 text-accent cursor-pointer"
+            >
+              <Download size={14} />
+              VIEW CV / RESUME
+            </motion.button>
           </motion.div>
 
           {/* Bottom Info */}

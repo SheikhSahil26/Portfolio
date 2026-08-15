@@ -16,6 +16,7 @@ export const personalInfo: PersonalInfo = {
     { label: 'Email', url: 'mailto:sahilsheikh261204@gmail.com', icon: 'mail' },
   ],
   focus: ['MERN', 'NESTJS',"SOFTWARE DEVELOPMENT", 'TYPESCRIPT', 'AI / ML', 'SYSTEM DESIGN'],
+  resumeUrl: '/sahil_latest_cv_22_may.pdf',
 };
 
 export const navItems: NavItem[] = [

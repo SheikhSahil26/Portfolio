@@ -4,7 +4,8 @@ import { personalInfo } from '../../data/personal';
 import { useCursor } from '../../components/cursor/CustomCursor';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { fadeInUp, staggerContainer } from '../../animations/variants';
-import { Mail, Globe, ExternalLink, Send, CheckCircle } from 'lucide-react';
+import { Mail, Globe, ExternalLink, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { sendContactForm } from '../../lib/api';
 
 const socialIcons: Record<string, React.ReactNode> = {
   github: <Globe size={18} />,
@@ -16,6 +17,8 @@ export default function Contact() {
   const { setCursorVariant } = useCursor();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
@@ -28,7 +31,7 @@ export default function Contact() {
     return newErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -36,8 +39,18 @@ export default function Contact() {
       return;
     }
     setErrors({});
-    setSubmitted(true);
-    // Backend integration will go here
+    setApiError(null);
+    setIsSubmitting(true);
+
+    const response = await sendContactForm(formData);
+
+    setIsSubmitting(false);
+
+    if (response.success) {
+      setSubmitted(true);
+    } else {
+      setApiError(response.error || 'Failed to send email. Please try again.');
+    }
   };
 
   return (
@@ -112,7 +125,7 @@ export default function Contact() {
                   MESSAGE SENT
                 </h3>
                 <p className="font-mono text-[0.7rem] tracking-[0.1em] text-text-secondary">
-                  Thanks for reaching out. I'll get back to you soon.
+                  Thanks for reaching out! Your message was delivered directly to my inbox.
                 </p>
                 <button
                   onClick={() => {
@@ -128,6 +141,12 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {apiError && (
+                  <div className="p-4 border border-red-500/30 bg-red-500/10 rounded text-red-400 font-mono text-[0.7rem] tracking-wide">
+                    ⚠️ {apiError}
+                  </div>
+                )}
+
                 {/* Name */}
                 <div>
                   <label className="font-mono text-[0.6rem] tracking-[0.2em] text-text-muted block mb-2">
@@ -139,7 +158,8 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full bg-transparent border-b border-white/10 py-3 text-text-primary outline-none focus:border-accent transition-colors duration-300 text-body"
+                    disabled={isSubmitting}
+                    className="w-full bg-transparent border-b border-white/10 py-3 text-text-primary outline-none focus:border-accent transition-colors duration-300 text-body disabled:opacity-50"
                     placeholder="Your name"
                     onMouseEnter={() => setCursorVariant('hover')}
                     onMouseLeave={() => setCursorVariant('default')}
@@ -162,7 +182,8 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full bg-transparent border-b border-white/10 py-3 text-text-primary outline-none focus:border-accent transition-colors duration-300 text-body"
+                    disabled={isSubmitting}
+                    className="w-full bg-transparent border-b border-white/10 py-3 text-text-primary outline-none focus:border-accent transition-colors duration-300 text-body disabled:opacity-50"
                     placeholder="your@email.com"
                     onMouseEnter={() => setCursorVariant('hover')}
                     onMouseLeave={() => setCursorVariant('default')}
@@ -184,8 +205,9 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
                     }
+                    disabled={isSubmitting}
                     rows={5}
-                    className="w-full bg-transparent border-b border-white/10 py-3 text-text-primary outline-none focus:border-accent transition-colors duration-300 text-body resize-none"
+                    className="w-full bg-transparent border-b border-white/10 py-3 text-text-primary outline-none focus:border-accent transition-colors duration-300 text-body resize-none disabled:opacity-50"
                     placeholder="Tell me about your project..."
                     onMouseEnter={() => setCursorVariant('hover')}
                     onMouseLeave={() => setCursorVariant('default')}
@@ -200,15 +222,25 @@ export default function Contact() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="group flex items-center gap-3 font-mono text-[0.7rem] tracking-[0.2em] px-8 py-4 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 transition-all duration-300 mt-8"
+                  disabled={isSubmitting}
+                  className="group flex items-center gap-3 font-mono text-[0.7rem] tracking-[0.2em] px-8 py-4 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 transition-all duration-300 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
                   onMouseEnter={() => setCursorVariant('hover')}
                   onMouseLeave={() => setCursorVariant('default')}
                 >
-                  SEND MESSAGE
-                  <Send
-                    size={14}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
+                  {isSubmitting ? (
+                    <>
+                      SENDING...
+                      <Loader2 size={14} className="animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      SEND MESSAGE
+                      <Send
+                        size={14}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </>
+                  )}
                 </button>
               </form>
             )}
